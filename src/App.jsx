@@ -30,13 +30,22 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [pricingSettings, setPricingSettings] = useState(initialSettings);
 
+  const prevWidth = React.useRef(window.innerWidth);
+
   React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsChatOpen(true);
-      } else {
+      const currentWidth = window.innerWidth;
+      const wasDesktop = prevWidth.current > 768;
+      const isDesktop = currentWidth > 768;
+
+      // Only toggle chat state if we actually cross the breakpoint
+      if (wasDesktop && !isDesktop) {
         setIsChatOpen(false);
+      } else if (!wasDesktop && isDesktop) {
+        setIsChatOpen(true);
       }
+      
+      prevWidth.current = currentWidth;
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
