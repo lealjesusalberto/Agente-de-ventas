@@ -140,35 +140,51 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
           setJobData(prev => ({ ...prev, clientName: text }));
           let catText = '';
           if (hardwareInventory && hardwareInventory.length > 0) {
-            catText = hardwareInventory.map(cat => `\n- **${cat.category}**`).join('');
+            catText = hardwareInventory.map((cat, i) => `\n${i + 1}. **${cat.category}**`).join('');
           }
-          addBotMessage(`¡Mucho gusto ${text}! Nuestro inventario está dividido en las siguientes categorías:${catText}\n\n¿De qué categoría te gustaría ver los productos?`);
+          addBotMessage(`¡Mucho gusto ${text}! Nuestro inventario está dividido en las siguientes categorías:${catText}\n\nPor favor, responde con el número o nombre de la categoría.`);
           setBotState('ASK_HW_CATEGORY');
           break;
         case 'ASK_HW_CATEGORY':
           let matchedCategory = null;
           let itemsList = [];
           if (hardwareInventory) {
-            const foundCat = hardwareInventory.find(cat => lowerText.includes(cat.category.toLowerCase()));
-            if (foundCat) {
+            const num = parseInt(text, 10);
+            if (!isNaN(num) && num > 0 && num <= hardwareInventory.length) {
+              const foundCat = hardwareInventory[num - 1];
               matchedCategory = foundCat.category;
               itemsList = foundCat.items;
+            } else {
+              const foundCat = hardwareInventory.find(cat => lowerText.includes(cat.category.toLowerCase()));
+              if (foundCat) {
+                matchedCategory = foundCat.category;
+                itemsList = foundCat.items;
+              }
             }
           }
           
           if (matchedCategory) {
             setJobData(prev => ({ ...prev, material: matchedCategory }));
-            const itemsStr = itemsList.map(item => `\n- ${item}`).join('');
-            addBotMessage(`Excelente elección. En **${matchedCategory}** tenemos disponibles:${itemsStr}\n\n¿Qué producto exacto deseas ordenar?`);
+            const itemsStr = itemsList.map((item, i) => `\n${i + 1}. ${item}`).join('');
+            addBotMessage(`Excelente elección. En **${matchedCategory}** tenemos disponibles:${itemsStr}\n\nResponde con el número o nombre del producto exacto que deseas.`);
             setBotState('ASK_HW_PRODUCT');
           } else {
-            const catNames = hardwareInventory?.map(c => c.category).join(', ') || 'Herramientas, Pintura...';
-            addBotMessage(`No pude encontrar esa categoría. Por favor elige una de las siguientes: **${catNames}**.`);
+            addBotMessage(`No pude encontrar esa categoría. Por favor escribe el número de una de las opciones válidas.`);
           }
           break;
         case 'ASK_HW_PRODUCT':
-          setJobData(prev => ({ ...prev, description: text }));
-          addBotMessage(`Perfecto. ¿Qué cantidad necesitas de ${text}?`);
+          let selectedProduct = text;
+          if (hardwareInventory) {
+            const currentCat = hardwareInventory.find(cat => cat.category === jobData.material);
+            if (currentCat) {
+              const num = parseInt(text, 10);
+              if (!isNaN(num) && num > 0 && num <= currentCat.items.length) {
+                selectedProduct = currentCat.items[num - 1];
+              }
+            }
+          }
+          setJobData(prev => ({ ...prev, description: selectedProduct }));
+          addBotMessage(`Perfecto. ¿Qué cantidad necesitas de ${selectedProduct}?`);
           setBotState('ASK_HW_QUANTITY');
           break;
         case 'ASK_HW_QUANTITY':
@@ -214,8 +230,11 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
     switch (botState) {
       case 'ASK_NAME':
         setJobData(prev => ({ ...prev, clientName: text }));
-        const matNames = pricingSettings?.materials.map(m => m.name).join(', ') || 'Lona, Vinil, DTF...';
-        addBotMessage(`¡Mucho gusto ${text}! Nuestro catálogo de productos incluye: **${matNames}**.\n\n¿Cuál de estos deseas cotizar hoy?`);
+        let matNamesList = '';
+        if (pricingSettings && pricingSettings.materials) {
+           matNamesList = pricingSettings.materials.map((m, i) => `\n${i + 1}. **${m.name}**`).join('');
+        }
+        addBotMessage(`¡Mucho gusto ${text}! Nuestro catálogo de productos incluye:${matNamesList}\n\nResponde con el número o nombre del material que deseas cotizar.`);
         setBotState('ASK_MATERIAL');
         break;
 
@@ -223,8 +242,16 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
         // Determine pricing type based on input
         let identifiedType = 'area';
         let matchedName = text;
-        if (pricingSettings) {
-          const foundMat = pricingSettings.materials.find(m => lowerText.includes(m.name.toLowerCase()) || m.name.toLowerCase().includes(lowerText));
+        if (pricingSettings && pricingSettings.materials) {
+          const num = parseInt(text, 10);
+          let foundMat = null;
+          
+          if (!isNaN(num) && num > 0 && num <= pricingSettings.materials.length) {
+            foundMat = pricingSettings.materials[num - 1];
+          } else {
+            foundMat = pricingSettings.materials.find(m => lowerText.includes(m.name.toLowerCase()) || m.name.toLowerCase().includes(lowerText));
+          }
+          
           if (foundMat) {
             identifiedType = foundMat.pricingType;
             matchedName = foundMat.name;
