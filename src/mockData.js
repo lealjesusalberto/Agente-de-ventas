@@ -82,8 +82,11 @@ export const mockHardwareOrders = [
 ];
 
 export const hardwareInventory = [
-  { category: 'Herramientas', items: ['Martillo', 'Destornillador', 'Taladro', 'Alicate'] },
-  { category: 'Tornillería', items: ['Tornillo 2"', 'Clavos', 'Tuercas', 'Arandelas'] },
-  { category: 'Pintura', items: ['Pintura (Galón)', 'Pintura (Medio Galón)', 'Brocha Pequeña', 'Brocha Grande', 'Rodillo'] },
-  { category: 'Construcción', items: ['Cemento', 'Arena', 'Ladrillo', 'Cabilla'] }
+  { category: 'Herramientas Manuales', items: ['Martillo de Uña', 'Destornillador Estría', 'Destornillador Plano', 'Alicate Universal', 'Llave Ajustable (Inglesa)', 'Cinta Métrica 5m'] },
+  { category: 'Herramientas Eléctricas', items: ['Taladro Percutor', 'Esmeril Angular', 'Sierra Circular', 'Lijadora Orbital'] },
+  { category: 'Tornillería y Fijación', items: ['Tornillo para Madera 2"', 'Tornillo Tirafondo', 'Clavos de Acero 3"', 'Tuercas Hexagonales', 'Arandelas Planas', 'Tacos Ramplug'] },
+  { category: 'Pintura y Acabados', items: ['Pintura Clase A (Galón)', 'Pintura Clase B (Galón)', 'Pintura (Medio Galón)', 'Brocha Pequeña 1"', 'Brocha Grande 4"', 'Rodillo Antigoteo', 'Bandeja para Pintar', 'Thinner (Galón)'] },
+  { category: 'Construcción', items: ['Cemento Portland (Saco)', 'Arena Lavada (M3)', 'Bloque de Arcilla', 'Cabilla de 1/2"', 'Alambre Dulce (Kg)'] },
+  { category: 'Plomería', items: ['Tubo PVC 1/2"', 'Codo PVC 90°', 'Teflón en Cinta', 'Llave de Arresto', 'Pegamento PVC'] },
+  { category: 'Electricidad', items: ['Cable THW N° 12', 'Tomacorriente Doble', 'Apagador Sencillo', 'Breaker 20A', 'Cinta Eléctrica 3M'] }
 ];
