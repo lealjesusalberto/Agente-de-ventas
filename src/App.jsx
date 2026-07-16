@@ -6,6 +6,7 @@ import FileValidatorModal from './components/FileValidatorModal';
 import SettingsModal from './components/SettingsModal';
 import { mockJobs, mockHardwareOrders, hardwareInventory } from './mockData';
 import ModuleSelector from './components/ModuleSelector';
+import LandingPage from './components/LandingPage';
 
 const initialSettings = {
   exchangeRate: 36.50,
@@ -22,6 +23,7 @@ const initialSettings = {
 function App() {
   const [jobs, setJobs] = useState(mockJobs);
   const [hardwareOrders, setHardwareOrders] = useState(mockHardwareOrders);
+  const [showLanding, setShowLanding] = useState(true);
   const [activeModule, setActiveModule] = useState('print'); // 'print' or 'hardware'
   const [hasSelectedModule, setHasSelectedModule] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(window.innerWidth > 768);
@@ -124,6 +126,10 @@ function App() {
       setIsChatOpen(true);
     }
   };
+
+  if (showLanding) {
+    return <LandingPage onTryDemo={() => setShowLanding(false)} />;
+  }
 
   if (!hasSelectedModule) {
     return <ModuleSelector onSelectModule={handleModuleSelect} />;
