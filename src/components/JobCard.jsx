@@ -105,6 +105,16 @@ const JobCard = ({ job, onVerifyPayment, onValidateFile, activeModule }) => {
             )}
           </span>
         </div>
+
+        {job.deliveryType && (
+          <div className="detail-row">
+            <span className="detail-label">Entrega:</span>
+            <span className="detail-value" style={{ display: 'flex', flexDirection: 'column', textAlign: 'right' }}>
+              <strong>{job.deliveryType === 'tienda' ? '🏪 Retiro en Tienda' : '🛵 Delivery'}</strong>
+              {job.deliveryAddress && <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{job.deliveryAddress}</span>}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

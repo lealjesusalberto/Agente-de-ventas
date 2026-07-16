@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatSimulator.css';
 
-const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated }) => {
+const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated }) => {
   const [messages, setMessages] = useState([
     { id: 1, text: '¡Hola! Soy el asistente virtual. Para brindarte una mejor atención, ¿me podrías indicar tu nombre o el de tu empresa?', sender: 'bot' }
   ]);
@@ -214,6 +214,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
             ]);
             setBotState('ASK_ANOTHER');
             const newJobId = `order-${Date.now()}`;
+            setLatestJobId(newJobId);
             setTimeout(() => {
               onJobCreated({
                 id: newJobId,
@@ -251,14 +252,17 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
           break;
         case 'ASK_DELIVERY_TYPE':
           if (lowerText.includes('tienda') || lowerText.includes('retiro')) {
+             if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryType: 'tienda' });
              addBotMessage('¡Perfecto! Te esperamos en nuestra sucursal principal. ¡Gracias por tu compra!');
              setBotState('DONE');
           } else {
+             if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryType: 'delivery' });
              addBotMessage('¡Entendido! Por favor, indica la dirección exacta para el envío por Delivery:');
              setBotState('ASK_DELIVERY_ADDRESS');
           }
           break;
         case 'ASK_DELIVERY_ADDRESS':
+          if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryAddress: text });
           addBotMessage(`¡Anotado! Enviaremos tu pedido a: **${text}**. ¡Gracias por tu compra! Procederemos a despachar tu pedido pronto.`);
           setBotState('DONE');
           break;

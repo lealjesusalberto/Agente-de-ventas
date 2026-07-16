@@ -178,6 +178,13 @@ function App() {
             <ChatSimulator 
               activeModule={activeModule}
               onJobCreated={handleNewJob} 
+              onUpdateJobDetails={(jobId, updates) => {
+                if (activeModule === 'print') {
+                   setJobs(prev => prev.map(job => job.id === jobId ? { ...job, ...updates } : job));
+                } else {
+                   setHardwareOrders(prev => prev.map(order => order.id === jobId ? { ...order, ...updates } : order));
+                }
+              }}
               lastNotification={lastNotification}
               onUpdateJobFileStatus={handleUpdateJobFileStatus}
               pricingSettings={pricingSettings}
