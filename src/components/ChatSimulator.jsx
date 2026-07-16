@@ -242,9 +242,25 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
              addBotMessage(`¡Perfecto! Selecciona otra categoría:`, 600, catOptions2);
              setBotState('ASK_HW_CATEGORY');
           } else {
-             addBotMessage('¡Gracias por tu compra! Procederemos a despachar tu pedido pronto.');
-             setBotState('DONE');
+             addBotMessage('¡Excelente! Para finalizar, ¿deseas retirar tu pedido en la tienda o prefieres envío por Delivery?', 600, [
+               { label: '🏪 Retiro en Tienda', value: 'tienda' },
+               { label: '🛵 Envío Delivery', value: 'delivery' }
+             ]);
+             setBotState('ASK_DELIVERY_TYPE');
           }
+          break;
+        case 'ASK_DELIVERY_TYPE':
+          if (lowerText.includes('tienda') || lowerText.includes('retiro')) {
+             addBotMessage('¡Perfecto! Te esperamos en nuestra sucursal principal. ¡Gracias por tu compra!');
+             setBotState('DONE');
+          } else {
+             addBotMessage('¡Entendido! Por favor, indica la dirección exacta para el envío por Delivery:');
+             setBotState('ASK_DELIVERY_ADDRESS');
+          }
+          break;
+        case 'ASK_DELIVERY_ADDRESS':
+          addBotMessage(`¡Anotado! Enviaremos tu pedido a: **${text}**. ¡Gracias por tu compra! Procederemos a despachar tu pedido pronto.`);
+          setBotState('DONE');
           break;
         case 'DONE':
           addBotMessage('Tu orden ya está en proceso. Si necesitas otra cosa, dime.');
