@@ -84,6 +84,6 @@ export const mockHardwareOrders = [
 export const hardwareInventory = [
   { category: 'Herramientas', items: ['Martillo', 'Destornillador', 'Taladro', 'Alicate'] },
   { category: 'Tornillería', items: ['Tornillo 2"', 'Clavos', 'Tuercas', 'Arandelas'] },
-  { category: 'Pintura', items: ['Pintura Blanca (Galón)', 'Pintura Negra (Galón)', 'Brocha', 'Rodillo'] },
+  { category: 'Pintura', items: ['Pintura (Galón)', 'Pintura (Medio Galón)', 'Brocha Pequeña', 'Brocha Grande', 'Rodillo'] },
   { category: 'Construcción', items: ['Cemento', 'Arena', 'Ladrillo', 'Cabilla'] }
 ];

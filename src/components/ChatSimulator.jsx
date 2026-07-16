@@ -54,9 +54,9 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
     }
   }, [lastNotification]);
 
-  const addBotMessage = (text, delay = 600) => {
+  const addBotMessage = (text, delay = 600, options = null, image = null) => {
     setTimeout(() => {
-      setMessages(prev => [...prev, { id: Date.now(), text, sender: 'bot' }]);
+      setMessages(prev => [...prev, { id: Date.now(), text, sender: 'bot', options, image }]);
     }, delay);
   };
 
@@ -138,38 +138,38 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
       switch (botState) {
         case 'ASK_NAME':
           setJobData(prev => ({ ...prev, clientName: text }));
-          let catText = '';
+          let catOptions = [];
           if (hardwareInventory && hardwareInventory.length > 0) {
-            catText = hardwareInventory.map((cat, i) => `\n${i + 1}. **${cat.category}**`).join('');
+            catOptions = hardwareInventory.map(cat => ({ label: cat.category, value: cat.category }));
           }
-          addBotMessage(`¡Mucho gusto ${text}! Nuestro inventario está dividido en las siguientes categorías:${catText}\n\nPor favor, responde con el número o nombre de la categoría.`);
+          addBotMessage(`¡Mucho gusto ${text}! Nuestro inventario está dividido en las siguientes categorías:\n\nPor favor, selecciona o responde con el nombre de la categoría.`, 600, catOptions);
           setBotState('ASK_HW_CATEGORY');
           break;
         case 'ASK_HW_CATEGORY':
           let matchedCategory = null;
           let itemsList = [];
           if (hardwareInventory) {
-            const num = parseInt(text, 10);
-            if (!isNaN(num) && num > 0 && num <= hardwareInventory.length) {
-              const foundCat = hardwareInventory[num - 1];
+            const foundCat = hardwareInventory.find(cat => lowerText.includes(cat.category.toLowerCase()) || text === cat.category);
+            if (foundCat) {
               matchedCategory = foundCat.category;
               itemsList = foundCat.items;
             } else {
-              const foundCat = hardwareInventory.find(cat => lowerText.includes(cat.category.toLowerCase()));
-              if (foundCat) {
-                matchedCategory = foundCat.category;
-                itemsList = foundCat.items;
+              const num = parseInt(text, 10);
+              if (!isNaN(num) && num > 0 && num <= hardwareInventory.length) {
+                const fCat = hardwareInventory[num - 1];
+                matchedCategory = fCat.category;
+                itemsList = fCat.items;
               }
             }
           }
           
           if (matchedCategory) {
             setJobData(prev => ({ ...prev, material: matchedCategory }));
-            const itemsStr = itemsList.map((item, i) => `\n${i + 1}. ${item}`).join('');
-            addBotMessage(`Excelente elección. En **${matchedCategory}** tenemos disponibles:${itemsStr}\n\nResponde con el número o nombre del producto exacto que deseas.`);
+            const itemOptions = itemsList.map(item => ({ label: item, value: item }));
+            addBotMessage(`Excelente elección. En **${matchedCategory}** tenemos disponibles:\n\nSelecciona el producto exacto que deseas.`, 600, itemOptions);
             setBotState('ASK_HW_PRODUCT');
           } else {
-            addBotMessage(`No pude encontrar esa categoría. Por favor escribe el número de una de las opciones válidas.`);
+            addBotMessage(`No pude encontrar esa categoría. Por favor escribe una de las opciones válidas.`);
           }
           break;
         case 'ASK_HW_PRODUCT':
@@ -188,14 +188,31 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
           setBotState('ASK_HW_QUANTITY');
           break;
         case 'ASK_HW_QUANTITY':
-          setJobData(prev => ({ ...prev, measurements: text, priceUsd: (Math.random() * 50 + 10).toFixed(2) }));
-          addBotMessage(`¡Anotado! El pedido de ${jobData.description} (Cant: ${text}) tiene un costo estimado de $${(Math.random() * 50 + 10).toFixed(2)}.\n\n¿Deseas confirmar la orden de compra? (Sí/No)`);
+          const price = (Math.random() * 50 + 10).toFixed(2);
+          setJobData(prev => ({ ...prev, measurements: text, priceUsd: price }));
+          
+          const getProductImageUrl = (prod) => {
+            const p = prod.toLowerCase();
+            if (p.includes('pintura')) return 'https://images.unsplash.com/photo-1562184552-997c461abbe6?auto=format&fit=crop&w=400&q=80';
+            if (p.includes('brocha')) return 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80';
+            if (p.includes('herramienta') || p.includes('martillo') || p.includes('taladro')) return 'https://images.unsplash.com/photo-1581166397057-235af2b3c6dd?auto=format&fit=crop&w=400&q=80';
+            if (p.includes('tornillo') || p.includes('clavo')) return 'https://images.unsplash.com/photo-1588691516086-4447c2111d51?auto=format&fit=crop&w=400&q=80';
+            return 'https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?auto=format&fit=crop&w=400&q=80';
+          };
+          
+          addBotMessage(`¡Anotado! El pedido de ${jobData.description} (Cant: ${text}) tiene un costo estimado de $${price}.\n\n¿Deseas confirmar la orden de compra?`, 600, [
+            { label: '✅ Sí, confirmar orden', value: 'si' },
+            { label: '❌ No, cancelar', value: 'no' }
+          ], getProductImageUrl(jobData.description));
           setBotState('CONFIRM_QUOTE');
           break;
         case 'CONFIRM_QUOTE':
           if (lowerText.includes('si') || lowerText.includes('sí') || lowerText.includes('ok') || lowerText.includes('claro')) {
-            addBotMessage('¡Orden registrada con éxito! 🎉 Por favor realiza tu pago para proceder al despacho.');
-            setBotState('DONE');
+            addBotMessage('¡Orden registrada con éxito! 🎉 ¿Deseas ordenar algo más?', 600, [
+              { label: 'Sí, ordenar otro producto', value: 'si' },
+              { label: 'No, finalizar orden', value: 'no' }
+            ]);
+            setBotState('ASK_ANOTHER');
             const newJobId = `order-${Date.now()}`;
             setTimeout(() => {
               onJobCreated({
@@ -214,6 +231,19 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
           } else {
             addBotMessage('No hay problema. Avisame si necesitas algo más.');
             setBotState('GREETING');
+          }
+          break;
+        case 'ASK_ANOTHER':
+          if (lowerText.includes('si') || lowerText.includes('sí') || lowerText.includes('ok')) {
+             let catOptions2 = [];
+             if (hardwareInventory && hardwareInventory.length > 0) {
+               catOptions2 = hardwareInventory.map(cat => ({ label: cat.category, value: cat.category }));
+             }
+             addBotMessage(`¡Perfecto! Selecciona otra categoría:`, 600, catOptions2);
+             setBotState('ASK_HW_CATEGORY');
+          } else {
+             addBotMessage('¡Gracias por tu compra! Procederemos a despachar tu pedido pronto.');
+             setBotState('DONE');
           }
           break;
         case 'DONE':
@@ -332,16 +362,18 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
     }
   };
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
+  const handleSend = (e, overrideText = null) => {
+    if (e) e.preventDefault();
+    const text = overrideText !== null ? overrideText : inputValue;
+    if (!text.trim()) return;
 
     // Add user message
-    const newMsg = { id: Date.now(), text: inputValue, sender: 'user' };
+    const newMsg = { id: Date.now(), text, sender: 'user' };
     setMessages(prev => [...prev, newMsg]);
     
-    const text = inputValue;
-    setInputValue('');
+    if (overrideText === null) {
+      setInputValue('');
+    }
     
     // Process bot logic
     processInput(text);
@@ -401,6 +433,32 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
         {messages.map(msg => (
           <div key={msg.id} className={`message ${msg.sender} ${msg.type === 'success' ? 'success-msg' : ''}`}>
             {msg.text}
+            {msg.image && (
+              <img src={msg.image} alt="Producto" style={{ width: '100%', borderRadius: '8px', marginTop: '8px' }} />
+            )}
+            {msg.options && (
+              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {msg.options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(null, opt.value)}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.9)',
+                      border: '1px solid var(--primary-color)',
+                      color: 'var(--primary-color)',
+                      padding: '8px 12px',
+                      borderRadius: '16px',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ))}
         <div ref={messagesEndRef} />
