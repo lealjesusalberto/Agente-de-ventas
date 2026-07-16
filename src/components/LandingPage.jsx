@@ -62,8 +62,8 @@ const LandingPage = ({ onTryDemo }) => {
           </div>
           <div className="feature-card">
             <div className="feature-icon">🧩</div>
-            <h3>Múltiples Módulos</h3>
-            <p>Ya sea que tengas una Imprenta o una Ferretería, el sistema adapta su catálogo y lógica a tu modelo de negocio.</p>
+            <h3>Adaptable a tu Industria</h3>
+            <p>Adquiere el módulo específico para tu nicho (Imprenta, Ferretería, Farmacia). El sistema adapta su catálogo y lógica a tu modelo exacto de negocio.</p>
           </div>
         </div>
       </section>
@@ -75,11 +75,11 @@ const LandingPage = ({ onTryDemo }) => {
           
           <div className="pricing-card">
             <h3>Básico</h3>
-            <div className="price"><span>$29</span> /mes</div>
+            <div className="price"><span>$99</span> /mes</div>
             <ul className="pricing-features">
-              <li>✔️ Módulo Único</li>
-              <li>✔️ 1,000 interacciones de IA</li>
-              <li>✔️ Tablero Kanban básico</li>
+              <li>✔️ 1 Módulo de Industria a elegir</li>
+              <li>✔️ 2,000 interacciones de IA / mes</li>
+              <li>✔️ Tablero Kanban estándar</li>
               <li>❌ Soporte prioritario</li>
             </ul>
             <button className="btn-outline full-width">Elegir Plan</button>
@@ -88,23 +88,23 @@ const LandingPage = ({ onTryDemo }) => {
           <div className="pricing-card popular">
             <div className="popular-badge">Más Elegido</div>
             <h3>Pro</h3>
-            <div className="price"><span>$79</span> /mes</div>
+            <div className="price"><span>$249</span> /mes</div>
             <ul className="pricing-features">
-              <li>✔️ Multimódulo</li>
-              <li>✔️ 10,000 interacciones de IA</li>
-              <li>✔️ Tablero Kanban Avanzado</li>
-              <li>✔️ Soporte 24/7</li>
+              <li>✔️ 1 Módulo de Industria a elegir</li>
+              <li>✔️ 10,000 interacciones de IA / mes</li>
+              <li>✔️ Tablero Kanban avanzado</li>
+              <li>✔️ Soporte técnico 24/7</li>
             </ul>
             <button className="btn-primary full-width">Elegir Plan</button>
           </div>
 
           <div className="pricing-card">
             <h3>Enterprise</h3>
-            <div className="price"><span>$199</span> /mes</div>
+            <div className="price"><span>$599</span> /mes</div>
             <ul className="pricing-features">
-              <li>✔️ Módulos Ilimitados</li>
+              <li>✔️ 1 Módulo de Industria a elegir</li>
               <li>✔️ IA Ilimitada</li>
-              <li>✔️ Modelos de IA personalizados</li>
+              <li>✔️ Agente IA entrenado a medida</li>
               <li>✔️ Asesor de cuenta dedicado</li>
             </ul>
             <button className="btn-outline full-width">Contactar Ventas</button>
