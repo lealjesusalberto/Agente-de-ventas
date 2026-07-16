@@ -75,7 +75,7 @@ const LandingPage = ({ onTryDemo }) => {
           
           <div className="pricing-card">
             <h3>Básico</h3>
-            <div className="price"><span>$99</span> /mes</div>
+            <div className="price"><span>$85</span> /mes</div>
             <ul className="pricing-features">
               <li>✔️ 1 Módulo de Industria a elegir</li>
               <li>✔️ 2,000 interacciones de IA / mes</li>
@@ -88,7 +88,7 @@ const LandingPage = ({ onTryDemo }) => {
           <div className="pricing-card popular">
             <div className="popular-badge">Más Elegido</div>
             <h3>Pro</h3>
-            <div className="price"><span>$249</span> /mes</div>
+            <div className="price"><span>$209</span> /mes</div>
             <ul className="pricing-features">
               <li>✔️ 1 Módulo de Industria a elegir</li>
               <li>✔️ 10,000 interacciones de IA / mes</li>
@@ -100,7 +100,7 @@ const LandingPage = ({ onTryDemo }) => {
 
           <div className="pricing-card">
             <h3>Enterprise</h3>
-            <div className="price"><span>$599</span> /mes</div>
+            <div className="price"><span>$499</span> /mes</div>
             <ul className="pricing-features">
               <li>✔️ 1 Módulo de Industria a elegir</li>
               <li>✔️ IA Ilimitada</li>
