@@ -82,11 +82,11 @@ export const mockHardwareOrders = [
 ];
 
 export const hardwareInventory = [
-  { category: 'Herramientas Manuales', items: ['Martillo de Uña', 'Destornillador Estría', 'Destornillador Plano', 'Alicate Universal', 'Llave Ajustable (Inglesa)', 'Cinta Métrica 5m'] },
-  { category: 'Herramientas Eléctricas', items: ['Taladro Percutor', 'Esmeril Angular', 'Sierra Circular', 'Lijadora Orbital'] },
-  { category: 'Tornillería y Fijación', items: ['Tornillo para Madera 2"', 'Tornillo Tirafondo', 'Clavos de Acero 3"', 'Tuercas Hexagonales', 'Arandelas Planas', 'Tacos Ramplug'] },
-  { category: 'Pintura y Acabados', items: ['Pintura Clase A (Galón)', 'Pintura Clase B (Galón)', 'Pintura (Medio Galón)', 'Brocha Pequeña 1"', 'Brocha Grande 4"', 'Rodillo Antigoteo', 'Bandeja para Pintar', 'Thinner (Galón)'] },
-  { category: 'Construcción', items: ['Cemento Portland (Saco)', 'Arena Lavada (M3)', 'Bloque de Arcilla', 'Cabilla de 1/2"', 'Alambre Dulce (Kg)'] },
-  { category: 'Plomería', items: ['Tubo PVC 1/2"', 'Codo PVC 90°', 'Teflón en Cinta', 'Llave de Arresto', 'Pegamento PVC'] },
-  { category: 'Electricidad', items: ['Cable THW N° 12', 'Tomacorriente Doble', 'Apagador Sencillo', 'Breaker 20A', 'Cinta Eléctrica 3M'] }
+  { category: 'Herramientas Manuales', items: ['Martillo de Uña - $12.50', 'Destornillador Estría - $4.00', 'Destornillador Plano - $4.00', 'Alicate Universal - $8.00', 'Llave Ajustable (Inglesa) - $15.00', 'Cinta Métrica 5m - $6.50'] },
+  { category: 'Herramientas Eléctricas', items: ['Taladro Percutor - $45.00', 'Esmeril Angular - $35.00', 'Sierra Circular - $85.00', 'Lijadora Orbital - $40.00'] },
+  { category: 'Tornillería y Fijación', items: ['Tornillo para Madera 2" (Caja) - $5.00', 'Tornillo Tirafondo (Caja) - $8.00', 'Clavos de Acero 3" (Caja) - $6.00', 'Tuercas Hexagonales (100u) - $4.00', 'Arandelas Planas (100u) - $3.00', 'Tacos Ramplug (Caja) - $5.50'] },
+  { category: 'Pintura y Acabados', items: ['Pintura Clase A (Galón) - $25.00', 'Pintura Clase B (Galón) - $18.00', 'Pintura (Medio Galón) - $10.00', 'Brocha Pequeña 1" - $2.50', 'Brocha Grande 4" - $6.00', 'Rodillo Antigoteo - $8.50', 'Bandeja para Pintar - $4.00', 'Thinner (Galón) - $12.00'] },
+  { category: 'Construcción', items: ['Cemento Portland (Saco) - $8.50', 'Arena Lavada (M3) - $20.00', 'Bloque de Arcilla (100u) - $45.00', 'Cabilla de 1/2" - $7.00', 'Alambre Dulce (Kg) - $3.50'] },
+  { category: 'Plomería', items: ['Tubo PVC 1/2" - $4.00', 'Codo PVC 90° - $1.50', 'Teflón en Cinta - $0.80', 'Llave de Arresto - $5.00', 'Pegamento PVC - $4.50'] },
+  { category: 'Electricidad', items: ['Cable THW N° 12 (Metro) - $1.20', 'Tomacorriente Doble - $3.50', 'Apagador Sencillo - $2.50', 'Breaker 20A - $6.00', 'Cinta Eléctrica 3M - $2.00'] }
 ];

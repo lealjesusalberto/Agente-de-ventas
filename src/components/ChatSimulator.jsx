@@ -20,6 +20,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
     pricingType: 'area' 
   });
   const [latestJobId, setLatestJobId] = useState(null);
+  const [pendingOrders, setPendingOrders] = useState([]);
 
   useEffect(() => {
     // Reset conversation when module changes
@@ -188,7 +189,14 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
           setBotState('ASK_HW_QUANTITY');
           break;
         case 'ASK_HW_QUANTITY':
-          const price = (Math.random() * 50 + 10).toFixed(2);
+          let unitPrice = Math.random() * 50 + 10;
+          const matchPrice = jobData.description.match(/\$(\d+(\.\d+)?)/);
+          if (matchPrice) {
+            unitPrice = parseFloat(matchPrice[1]);
+          }
+          let qty = parseInt(text, 10);
+          if (isNaN(qty) || qty < 1) qty = 1;
+          const price = (unitPrice * qty).toFixed(2);
           setJobData(prev => ({ ...prev, measurements: text, priceUsd: price }));
           
           const getProductImageUrl = (prod) => {
@@ -215,20 +223,17 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
             setBotState('ASK_ANOTHER');
             const newJobId = `order-${Date.now()}`;
             setLatestJobId(newJobId);
-            setTimeout(() => {
-              onJobCreated({
-                id: newJobId,
-                clientName: jobData.clientName || 'Cliente Web',
-                clientType: 'Nuevo',
-                description: `${jobData.description} (Cant: ${jobData.measurements})`,
-                material: jobData.material || 'Ferretería',
-                status: 'pending',
-                paymentStatus: 'Pendiente',
-                fileStatus: 'N/A',
-                date: new Date().toISOString(),
-              });
-              if (onOrderGenerated) onOrderGenerated();
-            }, 1000);
+            setPendingOrders(prev => [...prev, {
+              id: newJobId,
+              clientName: jobData.clientName || 'Cliente Web',
+              clientType: 'Nuevo',
+              description: `${jobData.description} (Cant: ${jobData.measurements})`,
+              material: jobData.material || 'Ferretería',
+              status: 'pending',
+              paymentStatus: 'Pendiente',
+              fileStatus: 'N/A',
+              date: new Date().toISOString()
+            }]);
           } else {
             addBotMessage('No hay problema. Avisame si necesitas algo más.');
             setBotState('GREETING');
@@ -252,19 +257,24 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
           break;
         case 'ASK_DELIVERY_TYPE':
           if (lowerText.includes('tienda') || lowerText.includes('retiro')) {
-             if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryType: 'tienda' });
+             pendingOrders.forEach(order => {
+               onJobCreated({ ...order, deliveryType: 'tienda' });
+             });
              addBotMessage('¡Perfecto! Te esperamos en nuestra sucursal principal. ¡Gracias por tu compra!');
              setBotState('DONE');
+             setTimeout(() => { if (onOrderGenerated) onOrderGenerated(); }, 3500);
           } else {
-             if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryType: 'delivery' });
              addBotMessage('¡Entendido! Por favor, indica la dirección exacta para el envío por Delivery:');
              setBotState('ASK_DELIVERY_ADDRESS');
           }
           break;
         case 'ASK_DELIVERY_ADDRESS':
-          if (onUpdateJobDetails && latestJobId) onUpdateJobDetails(latestJobId, { deliveryAddress: text });
+          pendingOrders.forEach(order => {
+             onJobCreated({ ...order, deliveryType: 'delivery', deliveryAddress: text });
+          });
           addBotMessage(`¡Anotado! Enviaremos tu pedido a: **${text}**. ¡Gracias por tu compra! Procederemos a despachar tu pedido pronto.`);
           setBotState('DONE');
+          setTimeout(() => { if (onOrderGenerated) onOrderGenerated(); }, 3500);
           break;
         case 'DONE':
           addBotMessage('Tu orden ya está en proceso. Si necesitas otra cosa, dime.');
