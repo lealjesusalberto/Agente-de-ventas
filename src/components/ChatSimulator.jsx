@@ -445,7 +445,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, lastNotification, onUpdateJ
                     style={{
                       background: 'rgba(255, 255, 255, 0.9)',
                       border: '1px solid var(--primary-color)',
-                      color: 'var(--primary-color)',
+                      color: '#000',
                       padding: '8px 12px',
                       borderRadius: '16px',
                       fontSize: '0.85rem',
