@@ -7,6 +7,8 @@ import SettingsModal from './components/SettingsModal';
 import { mockJobs, mockHardwareOrders, hardwareInventory } from './mockData';
 import ModuleSelector from './components/ModuleSelector';
 import LandingPage from './components/LandingPage';
+import StoreCatalog from './components/StoreCatalog';
+import ShoppingCart from './components/ShoppingCart';
 
 const initialSettings = {
   exchangeRate: 36.50,
@@ -24,13 +26,32 @@ function App() {
   const [jobs, setJobs] = useState(mockJobs);
   const [hardwareOrders, setHardwareOrders] = useState(mockHardwareOrders);
   const [showLanding, setShowLanding] = useState(true);
-  const [activeModule, setActiveModule] = useState('print'); // 'print' or 'hardware'
+  const [activeModule, setActiveModule] = useState('print'); // 'print', 'hardware', or 'store'
   const [hasSelectedModule, setHasSelectedModule] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(window.innerWidth > 768);
   const [lastNotification, setLastNotification] = useState(null);
   const [jobToValidate, setJobToValidate] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [pricingSettings, setPricingSettings] = useState(initialSettings);
+  
+  // Store state
+  const [storeSearchQuery, setStoreSearchQuery] = useState('');
+  const [cart, setCart] = useState([]);
+
+  const handleAddToCart = (product, quantity = 1) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.id === product.id);
+      if (existing) {
+        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item);
+      }
+      return [...prev, { ...product, quantity }];
+    });
+    notifyClient({ text: `🛒 Se ha añadido ${product.name} al carrito.`, type: 'info' });
+  };
+
+  const handleRemoveFromCart = (index) => {
+    setCart(prev => prev.filter((_, i) => i !== index));
+  };
 
   const prevWidth = React.useRef(window.innerWidth);
 
@@ -139,9 +160,15 @@ function App() {
     <div className="app-container">
       <header className="header">
         <div>
-          <h1>{activeModule === 'print' ? 'Print Manager' : 'Ferretería Manager'}</h1>
+          <h1>
+            {activeModule === 'print' ? 'Print Manager' : 
+             activeModule === 'hardware' ? 'Ferretería Manager' : 
+             'Tienda en Línea'}
+          </h1>
           <p style={{ color: 'var(--text-secondary)' }}>
-            {activeModule === 'print' ? 'Control de Producción & IA' : 'Control de Inventario & Órdenes'}
+            {activeModule === 'print' ? 'Control de Producción & IA' : 
+             activeModule === 'hardware' ? 'Control de Inventario & Órdenes' : 
+             'Catálogo Interactivo con IA'}
           </p>
         </div>
         
@@ -166,13 +193,34 @@ function App() {
       
       <main className="main-content">
         <div className="kanban-wrapper">
-          <KanbanBoard 
-            jobs={activeModule === 'print' ? jobs : hardwareOrders} 
-            activeModule={activeModule}
-            onJobMove={handleJobMove}
-            onVerifyPayment={handleVerifyPayment}
-            onValidateFile={(jobId) => setJobToValidate(jobId)}
-          />
+          {activeModule === 'store' ? (
+            <div style={{ display: 'flex', width: '100%', height: '100%', gap: '1rem' }}>
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                <StoreCatalog 
+                  storeSearchQuery={storeSearchQuery} 
+                  onAddToCart={(p) => handleAddToCart(p, 1)} 
+                />
+              </div>
+              <div style={{ width: '300px', flexShrink: 0 }}>
+                <ShoppingCart 
+                  cart={cart}
+                  onRemoveFromCart={handleRemoveFromCart}
+                  onCheckout={() => {
+                    notifyClient({ text: '🛒 Procediendo al pago...', type: 'info' });
+                    setStoreSearchQuery('');
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <KanbanBoard 
+              jobs={activeModule === 'print' ? jobs : hardwareOrders} 
+              activeModule={activeModule}
+              onJobMove={handleJobMove}
+              onVerifyPayment={handleVerifyPayment}
+              onValidateFile={(jobId) => setJobToValidate(jobId)}
+            />
+          )}
         </div>
         
         <div className={`chat-wrapper ${isChatOpen ? 'open' : 'closed'}`}>
@@ -187,7 +235,7 @@ function App() {
               onUpdateJobDetails={(jobId, updates) => {
                 if (activeModule === 'print') {
                    setJobs(prev => prev.map(job => job.id === jobId ? { ...job, ...updates } : job));
-                } else {
+                } else if (activeModule === 'hardware') {
                    setHardwareOrders(prev => prev.map(order => order.id === jobId ? { ...order, ...updates } : order));
                 }
               }}
@@ -196,6 +244,9 @@ function App() {
               pricingSettings={pricingSettings}
               hardwareInventory={hardwareInventory}
               onOrderGenerated={() => setIsChatOpen(false)}
+              onBotSearch={(query) => setStoreSearchQuery(query)}
+              onBotAddToCart={handleAddToCart}
+              cart={cart}
             />
           </div>
         </div>

@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatSimulator.css';
 
-const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated }) => {
-  const [messages, setMessages] = useState([
-    { id: 1, text: '¡Hola! Soy el asistente virtual. Para brindarte una mejor atención, ¿me podrías indicar tu nombre o el de tu empresa?', sender: 'bot' }
-  ]);
+const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated, onBotSearch, onBotAddToCart, cart }) => {
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   
   // States for the conversation FSM
@@ -24,8 +22,15 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
 
   useEffect(() => {
     // Reset conversation when module changes
-    setMessages([{ id: Date.now(), text: `¡Hola! Soy el asistente virtual de ${activeModule === 'print' ? 'Impresión' : 'Ferretería'}. Para brindarte una mejor atención, ¿me podrías indicar tu nombre o el de tu empresa?`, sender: 'bot' }]);
-    setBotState('ASK_NAME');
+    let greeting = `¡Hola! Soy el asistente virtual de ${activeModule === 'print' ? 'Impresión' : activeModule === 'hardware' ? 'Ferretería' : 'la Tienda en Línea'}. `;
+    if (activeModule === 'store') {
+        greeting += '¿En qué te puedo ayudar hoy? Puedes preguntarme por herramientas, pinturas, o lo que busques.';
+        setBotState('STORE_CHAT');
+    } else {
+        greeting += 'Para brindarte una mejor atención, ¿me podrías indicar tu nombre o el de tu empresa?';
+        setBotState('ASK_NAME');
+    }
+    setMessages([{ id: Date.now(), text: greeting, sender: 'bot' }]);
     setJobData({
       clientName: '',
       description: '', 
@@ -134,7 +139,20 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
   const processInput = (text) => {
     const lowerText = text.toLowerCase();
     
-    // Ferreteria Flow
+    if (botState === 'STORE_CHAT') {
+      let searchWord = lowerText
+         .replace(/busco|quiero|tienen|necesito|precio|de|un|una|unos|unas|donde|hay/g, '')
+         .trim();
+      
+      if (searchWord.length < 2) searchWord = text;
+      
+      if (onBotSearch) onBotSearch(searchWord);
+      
+      addBotMessage(`🔍 Claro, he buscado "${searchWord}" en nuestro catálogo. ¡Revisa los resultados a la izquierda! Si encuentras lo que buscas, puedes añadirlo al carrito desde la tarjeta.`);
+      return;
+    }
+
+    // Hardware Flow
     if (activeModule === 'hardware') {
       switch (botState) {
         case 'ASK_NAME':

@@ -90,3 +90,66 @@ export const hardwareInventory = [
   { category: 'Plomería', items: ['Tubo PVC 1/2" - $4.00', 'Codo PVC 90° - $1.50', 'Teflón en Cinta - $0.80', 'Llave de Arresto - $5.00', 'Pegamento PVC - $4.50'] },
   { category: 'Electricidad', items: ['Cable THW N° 12 (Metro) - $1.20', 'Tomacorriente Doble - $3.50', 'Apagador Sencillo - $2.50', 'Breaker 20A - $6.00', 'Cinta Eléctrica 3M - $2.00'] }
 ];
+
+export const storeProducts = [
+  {
+    id: 'p1',
+    name: 'Martillo de Uña Forjado',
+    code: 'HR-1001',
+    price: 12.50,
+    description: 'Martillo resistente con mango de goma antideslizante, ideal para carpintería.',
+    image: 'https://images.unsplash.com/photo-1581166397057-235af2b3c6dd?auto=format&fit=crop&w=400&q=80',
+    stock: 24,
+    category: 'Herramientas Manuales'
+  },
+  {
+    id: 'p2',
+    name: 'Taladro Percutor 750W',
+    code: 'EL-2040',
+    price: 45.00,
+    description: 'Taladro eléctrico con función de percusión y velocidad variable. Incluye maletín.',
+    image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+    stock: 12,
+    category: 'Herramientas Eléctricas'
+  },
+  {
+    id: 'p3',
+    name: 'Pintura Clase A Blanca (Galón)',
+    code: 'PT-300',
+    price: 25.00,
+    description: 'Pintura acrílica lavable de alto rendimiento, acabado mate.',
+    image: 'https://images.unsplash.com/photo-1562184552-997c461abbe6?auto=format&fit=crop&w=400&q=80',
+    stock: 40,
+    category: 'Pintura y Acabados'
+  },
+  {
+    id: 'p4',
+    name: 'Brocha Profesional 4"',
+    code: 'PT-305',
+    price: 6.00,
+    description: 'Brocha de cerdas naturales, ideal para acabados lisos en paredes grandes.',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80',
+    stock: 100,
+    category: 'Pintura y Acabados'
+  },
+  {
+    id: 'p5',
+    name: 'Set de Destornilladores (6 pzas)',
+    code: 'HR-1050',
+    price: 15.00,
+    description: 'Juego de destornilladores estría y plano con punta magnética.',
+    image: 'https://images.unsplash.com/photo-1542013063-e659b02d6b38?auto=format&fit=crop&w=400&q=80',
+    stock: 18,
+    category: 'Herramientas Manuales'
+  },
+  {
+    id: 'p6',
+    name: 'Caja de Clavos de Acero 3"',
+    code: 'TR-500',
+    price: 6.00,
+    description: 'Caja de 1kg de clavos de acero galvanizado de alta resistencia.',
+    image: 'https://images.unsplash.com/photo-1588691516086-4447c2111d51?auto=format&fit=crop&w=400&q=80',
+    stock: 50,
+    category: 'Tornillería y Fijación'
+  }
+];
