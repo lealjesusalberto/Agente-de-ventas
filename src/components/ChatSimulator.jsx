@@ -177,15 +177,27 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
           addBotMessage('Por favor, indícame la dirección exacta para el envío.');
           setBotState('STORE_DELIVERY_ADDRESS');
         } else {
-          setJobData(prev => ({ ...prev, deliveryType: 'store_pickup' }));
-          finishStoreOrder(jobData.clientName, 'store_pickup', '');
+          setJobData(prev => ({ ...prev, deliveryType: 'store_pickup', deliveryAddress: '' }));
+          const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+          const totalBs = (total * pricingSettings.exchangeRate).toFixed(2);
+          addBotMessage(`Perfecto. El total de tu orden es **$${total.toFixed(2)}** (Bs. ${totalBs}).\n\nPara procesar tu pedido, por favor realiza un Pago Móvil a los siguientes datos:\n**Banco:** Banesco\n**CI/RIF:** J-123456789\n**Teléfono:** 0414-1234567\n\nUna vez hecho el pago, envíame el **número de referencia** por aquí.`);
+          setBotState('STORE_CONFIRM_PAYMENT');
         }
         return;
       }
 
       if (botState === 'STORE_DELIVERY_ADDRESS') {
         setJobData(prev => ({ ...prev, deliveryAddress: text }));
-        finishStoreOrder(jobData.clientName, 'delivery', text);
+        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const totalBs = (total * pricingSettings.exchangeRate).toFixed(2);
+        addBotMessage(`¡Anotado! El total de tu orden (con delivery) es **$${total.toFixed(2)}** (Bs. ${totalBs}).\n\nPara procesar tu pedido, por favor realiza un Pago Móvil a los siguientes datos:\n**Banco:** Banesco\n**CI/RIF:** J-123456789\n**Teléfono:** 0414-1234567\n\nUna vez hecho el pago, envíame el **número de referencia** por aquí.`);
+        setBotState('STORE_CONFIRM_PAYMENT');
+        return;
+      }
+
+      if (botState === 'STORE_CONFIRM_PAYMENT') {
+        setJobData(prev => ({ ...prev, paymentRef: text }));
+        finishStoreOrder(jobData.clientName, jobData.deliveryType, jobData.deliveryAddress, text);
         return;
       }
     }
@@ -479,7 +491,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
     }
   };
 
-  const finishStoreOrder = (clientName, dType, dAddress) => {
+  const finishStoreOrder = (clientName, dType, dAddress, paymentRef) => {
     const itemsDesc = cart.map(i => `${i.quantity}x ${i.name}`).join(', ');
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     
@@ -488,7 +500,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
       id: newJobId,
       clientName: clientName || 'Cliente Web',
       clientType: 'Nuevo',
-      description: itemsDesc,
+      description: itemsDesc + `\nRef Pago: ${paymentRef}`,
       material: 'Tienda en Línea',
       status: 'pending',
       priceUsd: total.toFixed(2),
@@ -496,12 +508,13 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
       date: new Date().toISOString(),
       priority: 'normal',
       deliveryType: dType,
-      deliveryAddress: dAddress
+      deliveryAddress: dAddress,
+      paymentStatus: 'Verificando'
     };
 
     if (onJobCreated) onJobCreated(newOrder);
     
-    let endMsg = `¡Orden confirmada! 🎉 Hemos registrado tu compra por $${total.toFixed(2)}.\n\n`;
+    let endMsg = `¡Pago recibido y orden generada con éxito! 🎉 (Ref: ${paymentRef}). Hemos registrado tu compra por $${total.toFixed(2)}.\n\n`;
     if (dType === 'delivery') {
       endMsg += `Será enviada a: ${dAddress}. Te contactaremos pronto.`;
     } else {
