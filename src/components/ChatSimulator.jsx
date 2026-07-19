@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatSimulator.css';
 
-const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated, onBotSearch, onBotAddToCart, cart }) => {
+const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNotification, onUpdateJobFileStatus, pricingSettings, hardwareInventory, onOrderGenerated, onBotSearch, onBotAddToCart, cart, onClearCart }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   
@@ -510,6 +510,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
     
     addBotMessage(endMsg);
     setBotState('FINISHED');
+    if (onClearCart) onClearCart();
     
     setTimeout(() => {
       if (onOrderGenerated) onOrderGenerated();

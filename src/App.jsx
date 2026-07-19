@@ -313,6 +313,10 @@ function App() {
               onBotSearch={(query) => setStoreSearchQuery(query)}
               onBotAddToCart={handleAddToCart}
               cart={cart}
+              onClearCart={() => {
+                setCart([]);
+                setShowCart(false);
+              }}
             />
           </div>
         </div>
