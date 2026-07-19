@@ -207,3 +207,69 @@
 .add-to-cart-btn:active {
   transform: scale(0.98);
 }
+
+/* Floating Cart and Drawer */
+.floating-cart-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--accent-orange);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.floating-cart-btn:hover {
+  transform: scale(1.05);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border: 2px solid var(--bg-primary);
+}
+
+.cart-drawer-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100%;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  z-index: 99;
+  background-color: var(--glass-bg);
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+  .floating-cart-btn {
+    top: 20px;
+    bottom: auto;
+  }
+  
+  .cart-drawer-overlay {
+    width: 100%;
+    background-color: var(--bg-primary);
+  }
+}
