@@ -139,17 +139,55 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
   const processInput = (text) => {
     const lowerText = text.toLowerCase();
     
-    if (botState === 'STORE_CHAT') {
-      let searchWord = lowerText
-         .replace(/busco|quiero|tienen|necesito|precio|de|un|una|unos|unas|donde|hay/g, '')
-         .trim();
+    if (activeModule === 'store') {
+      if (botState === 'STORE_CHAT') {
+        if (lowerText.match(/comprar|pagar|listo|finalizar|checkout/)) {
+          if (cart && cart.length > 0) {
+            setBotState('STORE_ASK_NAME');
+            addBotMessage("¡Excelente! Vamos a procesar tu compra. ¿A nombre de quién hacemos el pedido?");
+          } else {
+            addBotMessage("Tu carrito está vacío. 🛒 ¿Qué producto estás buscando?");
+          }
+        } else {
+          let searchWord = lowerText
+             .replace(/busco|quiero|tienen|necesito|precio|de|un|una|unos|unas|donde|hay/g, '')
+             .trim();
+          
+          if (searchWord.length < 2) searchWord = text;
+          if (onBotSearch) onBotSearch(searchWord);
+          
+          addBotMessage(`🔍 Claro, he buscado "${searchWord}" en nuestro catálogo. ¡Revisa los resultados a la izquierda!\n\nAñade lo que necesites al carrito, y cuando termines dime **"listo"** o **"pagar"** para procesar tu orden.`);
+        }
+        return;
+      }
       
-      if (searchWord.length < 2) searchWord = text;
-      
-      if (onBotSearch) onBotSearch(searchWord);
-      
-      addBotMessage(`🔍 Claro, he buscado "${searchWord}" en nuestro catálogo. ¡Revisa los resultados a la izquierda! Si encuentras lo que buscas, puedes añadirlo al carrito desde la tarjeta.`);
-      return;
+      if (botState === 'STORE_ASK_NAME') {
+        setJobData(prev => ({ ...prev, clientName: text }));
+        addBotMessage("¿Deseas retirar en tienda o prefieres envío a domicilio (delivery)?", 600, [
+          { label: '🏪 Retiro en Tienda', value: 'retiro' },
+          { label: '🚚 Delivery', value: 'delivery' }
+        ]);
+        setBotState('STORE_DELIVERY_TYPE');
+        return;
+      }
+
+      if (botState === 'STORE_DELIVERY_TYPE') {
+        if (lowerText.includes('delivery') || lowerText.includes('envío') || lowerText.includes('domicilio')) {
+          setJobData(prev => ({ ...prev, deliveryType: 'delivery' }));
+          addBotMessage('Por favor, indícame la dirección exacta para el envío.');
+          setBotState('STORE_DELIVERY_ADDRESS');
+        } else {
+          setJobData(prev => ({ ...prev, deliveryType: 'store_pickup' }));
+          finishStoreOrder(jobData.clientName, 'store_pickup', '');
+        }
+        return;
+      }
+
+      if (botState === 'STORE_DELIVERY_ADDRESS') {
+        setJobData(prev => ({ ...prev, deliveryAddress: text }));
+        finishStoreOrder(jobData.clientName, 'delivery', text);
+        return;
+      }
     }
 
     // Hardware Flow
@@ -425,6 +463,57 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
     
     // Process bot logic
     processInput(text);
+  };
+
+  const processAction = (action) => {
+    // Si el usuario hace click en Checkout desde el Carrito UI, simular que escribió "pagar"
+    if (action === 'pagar_carrito' && activeModule === 'store') {
+      processInput('pagar');
+      return;
+    }
+
+    if (action === 'si' || action === 'no' || action === 'retiro' || action === 'delivery') {
+      processInput(action);
+    } else {
+      processInput(action);
+    }
+  };
+
+  const finishStoreOrder = (clientName, dType, dAddress) => {
+    const itemsDesc = cart.map(i => `${i.quantity}x ${i.name}`).join(', ');
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    
+    const newJobId = `store-${Date.now()}`;
+    const newOrder = {
+      id: newJobId,
+      clientName: clientName || 'Cliente Web',
+      clientType: 'Nuevo',
+      description: itemsDesc,
+      material: 'Tienda en Línea',
+      status: 'pending',
+      priceUsd: total.toFixed(2),
+      priceBs: (total * pricingSettings.exchangeRate).toFixed(2),
+      date: new Date().toISOString(),
+      priority: 'normal',
+      deliveryType: dType,
+      deliveryAddress: dAddress
+    };
+
+    if (onJobCreated) onJobCreated(newOrder);
+    
+    let endMsg = `¡Orden confirmada! 🎉 Hemos registrado tu compra por $${total.toFixed(2)}.\n\n`;
+    if (dType === 'delivery') {
+      endMsg += `Será enviada a: ${dAddress}. Te contactaremos pronto.`;
+    } else {
+      endMsg += `Te esperamos en la tienda para tu retiro.`;
+    }
+    
+    addBotMessage(endMsg);
+    setBotState('FINISHED');
+    
+    setTimeout(() => {
+      if (onOrderGenerated) onOrderGenerated();
+    }, 3500);
   };
 
   const handleFileAttach = (e) => {
