@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Ultra Premium Dark mode palette */
-  --bg-primary: #050505;
-  --bg-secondary: #0A0A0A;
-  --bg-glass: rgba(20, 20, 20, 0.5);
+  /* Ultra Premium Dark mode palette - Brand: Dark Blue & Orange */
+  --bg-primary: #050B14;     /* Deep Dark Blue */
+  --bg-secondary: #0A162A;   /* Secondary Dark Blue */
+  --bg-glass: rgba(10, 22, 42, 0.6);
   
   --text-primary: #FFFFFF;
   --text-secondary: #A1A1AA;
   
   /* Vibrant Accents */
   --accent-cyan: #00F0FF;
-  --accent-violet: #B026FF;
+  --accent-violet: #FF5C00; /* Re-mapped to Orange for global consistency */
   --accent-orange: #FF5C00;
   --accent-green: #00FF94;
   --accent-red: #FF003C;
@@ -51,8 +51,8 @@ body {
   overflow-x: hidden;
   /* Ultra Premium Mesh Background */
   background: 
-    radial-gradient(circle at 0% 0%, rgba(176, 38, 255, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(0, 240, 255, 0.15) 0%, transparent 40%);
+    radial-gradient(circle at 0% 0%, rgba(255, 92, 0, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(10, 35, 80, 0.4) 0%, transparent 50%);
   background-color: var(--bg-primary);
   background-attachment: fixed;
 }
