@@ -209,45 +209,12 @@ function App() {
 
               {/* Floating button */}
               <button 
+                className="floating-cart-btn"
                 onClick={() => setShowCart(!showCart)}
-                style={{
-                  position: 'absolute',
-                  bottom: '20px',
-                  right: '20px',
-                  backgroundColor: 'var(--accent-violet)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '60px',
-                  height: '60px',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                  zIndex: 100,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transition: 'transform 0.2s'
-                }}
               >
                 🛒
                 {cart.length > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '-5px',
-                    right: '-5px',
-                    background: '#ef4444',
-                    color: 'white',
-                    fontSize: '12px',
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontWeight: 'bold',
-                    border: '2px solid var(--bg-dark)'
-                  }}>
+                  <span className="cart-badge">
                     {cart.length}
                   </span>
                 )}
@@ -255,17 +222,7 @@ function App() {
 
               {/* Cart Drawer */}
               {showCart && (
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '350px',
-                  height: '100%',
-                  boxShadow: '-5px 0 15px rgba(0,0,0,0.5)',
-                  zIndex: 99,
-                  backgroundColor: 'var(--glass-bg)',
-                  animation: 'slideIn 0.3s ease-out forwards'
-                }}>
+                <div className="cart-drawer-overlay">
                   <ShoppingCart 
                     cart={cart}
                     onRemoveFromCart={handleRemoveFromCart}
