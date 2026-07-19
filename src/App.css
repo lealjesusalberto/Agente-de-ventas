@@ -4,7 +4,13 @@
   padding: 1.5rem; /* Tighter padding */
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh; /* Changed to dynamic viewport height for mobile keyboards */
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 0.5rem;
+  }
 }
 
 .header {
