@@ -37,6 +37,7 @@ function App() {
   // Store state
   const [storeSearchQuery, setStoreSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
 
   const handleAddToCart = (product, quantity = 1) => {
     setCart(prev => {
@@ -194,23 +195,88 @@ function App() {
       <main className="main-content">
         <div className="kanban-wrapper">
           {activeModule === 'store' ? (
-            <div style={{ display: 'flex', width: '100%', height: '100%', gap: '1rem' }}>
-              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
                 <StoreCatalog 
                   storeSearchQuery={storeSearchQuery} 
-                  onAddToCart={(p) => handleAddToCart(p, 1)} 
+                  onAddToCart={(p) => {
+                    handleAddToCart(p, 1);
+                    // Opcional: Mostrar carrito automáticamente al añadir
+                    // setShowCart(true); 
+                  }} 
                 />
               </div>
-              <div style={{ width: '300px', flexShrink: 0 }}>
-                <ShoppingCart 
-                  cart={cart}
-                  onRemoveFromCart={handleRemoveFromCart}
-                  onCheckout={() => {
-                    notifyClient({ text: '🛒 Procediendo al pago...', type: 'info' });
-                    setStoreSearchQuery('');
-                  }}
-                />
-              </div>
+
+              {/* Floating button */}
+              <button 
+                onClick={() => setShowCart(!showCart)}
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  right: '20px',
+                  backgroundColor: 'var(--accent-violet)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '60px',
+                  height: '60px',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
+                  zIndex: 100,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transition: 'transform 0.2s'
+                }}
+              >
+                🛒
+                {cart.length > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-5px',
+                    background: '#ef4444',
+                    color: 'white',
+                    fontSize: '12px',
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontWeight: 'bold',
+                    border: '2px solid var(--bg-dark)'
+                  }}>
+                    {cart.length}
+                  </span>
+                )}
+              </button>
+
+              {/* Cart Drawer */}
+              {showCart && (
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '350px',
+                  height: '100%',
+                  boxShadow: '-5px 0 15px rgba(0,0,0,0.5)',
+                  zIndex: 99,
+                  backgroundColor: 'var(--glass-bg)',
+                  animation: 'slideIn 0.3s ease-out forwards'
+                }}>
+                  <ShoppingCart 
+                    cart={cart}
+                    onRemoveFromCart={handleRemoveFromCart}
+                    onCheckout={() => {
+                      notifyClient({ text: '🛒 Procediendo al pago...', type: 'info' });
+                      setStoreSearchQuery('');
+                      setShowCart(false);
+                    }}
+                  />
+                </div>
+              )}
             </div>
           ) : (
             <KanbanBoard 
