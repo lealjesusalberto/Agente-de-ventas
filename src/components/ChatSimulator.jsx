@@ -180,7 +180,31 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
           setJobData(prev => ({ ...prev, deliveryType: 'store_pickup', deliveryAddress: '' }));
           const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
           const totalBs = (total * pricingSettings.exchangeRate).toFixed(2);
-          addBotMessage(`Perfecto. El total de tu orden es **$${total.toFixed(2)}** (Bs. ${totalBs}).\n\nPara procesar tu pedido, por favor realiza un Pago Móvil a los siguientes datos:\n**Banco:** Banesco\n**CI/RIF:** J-123456789\n**Teléfono:** 0414-1234567\n\nUna vez hecho el pago, envíame el **número de referencia** por aquí.`);
+          
+          const PaymentMsg = (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', lineHeight: '1.4' }}>
+              <span>Perfecto. El total de tu orden es <strong>${total.toFixed(2)}</strong> (Bs. {totalBs}).</span>
+              <span>Para procesar tu pedido, realiza un Pago Móvil a:</span>
+              <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', borderLeft: '3px solid var(--accent-violet)', fontFamily: 'monospace' }}>
+                <div><strong>Banco:</strong> Banesco (0134)</div>
+                <div><strong>CI/RIF:</strong> J-12345678-9</div>
+                <div><strong>Tel:</strong> 0414-1234567</div>
+              </div>
+              <button 
+                onClick={(e) => { 
+                  navigator.clipboard.writeText("Banesco\nJ-123456789\n04141234567"); 
+                  e.target.innerText = "✅ Copiado"; 
+                  setTimeout(() => e.target.innerText = "📋 Copiar Datos", 2000); 
+                }}
+                style={{ alignSelf: 'flex-start', background: 'var(--accent-violet)', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', fontSize: '12px' }}
+              >
+                📋 Copiar Datos
+              </button>
+              <span style={{ fontSize: '13px', fontStyle: 'italic' }}>Una vez pagues, envíame el <strong>número de referencia</strong> por aquí.</span>
+            </div>
+          );
+          
+          addBotMessage(PaymentMsg);
           setBotState('STORE_CONFIRM_PAYMENT');
         }
         return;
@@ -190,7 +214,31 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
         setJobData(prev => ({ ...prev, deliveryAddress: text }));
         const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
         const totalBs = (total * pricingSettings.exchangeRate).toFixed(2);
-        addBotMessage(`¡Anotado! El total de tu orden (con delivery) es **$${total.toFixed(2)}** (Bs. ${totalBs}).\n\nPara procesar tu pedido, por favor realiza un Pago Móvil a los siguientes datos:\n**Banco:** Banesco\n**CI/RIF:** J-123456789\n**Teléfono:** 0414-1234567\n\nUna vez hecho el pago, envíame el **número de referencia** por aquí.`);
+        
+        const PaymentMsg = (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', lineHeight: '1.4' }}>
+            <span>¡Anotado! El total de tu orden es <strong>${total.toFixed(2)}</strong> (Bs. {totalBs}).</span>
+            <span>Para procesar tu pedido, realiza un Pago Móvil a:</span>
+            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px', borderLeft: '3px solid var(--accent-violet)', fontFamily: 'monospace' }}>
+              <div><strong>Banco:</strong> Banesco (0134)</div>
+              <div><strong>CI/RIF:</strong> J-12345678-9</div>
+              <div><strong>Tel:</strong> 0414-1234567</div>
+            </div>
+            <button 
+              onClick={(e) => { 
+                navigator.clipboard.writeText("Banesco\nJ-123456789\n04141234567"); 
+                e.target.innerText = "✅ Copiado"; 
+                setTimeout(() => e.target.innerText = "📋 Copiar Datos", 2000); 
+              }}
+              style={{ alignSelf: 'flex-start', background: 'var(--accent-violet)', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', fontSize: '12px' }}
+            >
+              📋 Copiar Datos
+            </button>
+            <span style={{ fontSize: '13px', fontStyle: 'italic' }}>Una vez pagues, envíame el <strong>número de referencia</strong> por aquí.</span>
+          </div>
+        );
+        
+        addBotMessage(PaymentMsg);
         setBotState('STORE_CONFIRM_PAYMENT');
         return;
       }
