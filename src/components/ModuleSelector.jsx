@@ -25,7 +25,7 @@ const ModuleSelector = ({ onSelectModule }) => {
 
           <div className="module-card store-card" onClick={() => onSelectModule('store')}>
             <div className="card-icon">🏪</div>
-            <h2>Tienda en Línea</h2>
+            <h2>Mini Market</h2>
             <p>Catálogo de ventas B2C interactivo con IA.</p>
             <div className="card-glow"></div>
           </div>

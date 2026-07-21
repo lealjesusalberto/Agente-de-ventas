@@ -33,7 +33,7 @@ function App() {
   const [jobToValidate, setJobToValidate] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [pricingSettings, setPricingSettings] = useState(initialSettings);
-  
+
   // Store state
   const [storeSearchQuery, setStoreSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
@@ -68,7 +68,7 @@ function App() {
       } else if (!wasDesktop && isDesktop) {
         setIsChatOpen(true);
       }
-      
+
       prevWidth.current = currentWidth;
     };
     window.addEventListener('resize', handleResize);
@@ -89,22 +89,22 @@ function App() {
 
   const handleJobMove = (jobId, newStatus) => {
     if (activeModule === 'print') {
-      setJobs(prev => prev.map(job => 
+      setJobs(prev => prev.map(job =>
         job.id === jobId ? { ...job, status: newStatus } : job
       ));
     } else {
-      setHardwareOrders(prev => prev.map(order => 
+      setHardwareOrders(prev => prev.map(order =>
         order.id === jobId ? { ...order, status: newStatus } : order
       ));
     }
-    
+
     const statusNames = {
       'pending': 'Por Cotizar',
       'design': activeModule === 'print' ? 'En Diseño' : 'En Preparación',
       'printing': activeModule === 'print' ? 'En Impresión' : 'En Despacho',
       'done': activeModule === 'print' ? 'Listo / Acabados' : 'Entregado'
     };
-    
+
     if (newStatus === 'done') {
       notifyClient({ text: `🎉 ¡ATENCIÓN: PEDIDO LISTO! 🎉\n\nTu pedido de ha pasado a la etapa de **Listo / Acabados** y está preparado para retiro.`, type: 'success' });
     } else {
@@ -114,11 +114,11 @@ function App() {
 
   const handleVerifyPayment = (jobId) => {
     if (activeModule === 'print') {
-      setJobs(prev => prev.map(job => 
+      setJobs(prev => prev.map(job =>
         job.id === jobId ? { ...job, paymentStatus: 'Pagado' } : job
       ));
     } else {
-      setHardwareOrders(prev => prev.map(order => 
+      setHardwareOrders(prev => prev.map(order =>
         order.id === jobId ? { ...order, paymentStatus: 'Pagado' } : order
       ));
     }
@@ -127,7 +127,7 @@ function App() {
 
   const handleValidateSuccess = () => {
     if (jobToValidate) {
-      setJobs(prev => prev.map(job => 
+      setJobs(prev => prev.map(job =>
         job.id === jobToValidate ? { ...job, fileStatus: 'Validado' } : job
       ));
       notifyClient({ text: `🔍 *Archivo Aprobado*: Nuestro sistema IA analizó tu diseño y la resolución es perfecta para imprimir. ✅`, type: 'info' });
@@ -135,7 +135,7 @@ function App() {
   };
 
   const handleUpdateJobFileStatus = (jobId, newStatus) => {
-    setJobs(prev => prev.map(job => 
+    setJobs(prev => prev.map(job =>
       job.id === jobId ? { ...job, fileStatus: newStatus } : job
     ));
   };
@@ -162,27 +162,27 @@ function App() {
       <header className="header">
         <div>
           <h1>
-            {activeModule === 'print' ? 'Print Manager' : 
-             activeModule === 'hardware' ? 'Ferretería Manager' : 
-             'Tienda en Línea'}
+            {activeModule === 'print' ? 'Print Manager' :
+              activeModule === 'hardware' ? 'Ferretería Manager' :
+                'Mini Market'}
           </h1>
           <p style={{ color: 'var(--text-secondary)' }}>
-            {activeModule === 'print' ? 'Control de Producción & IA' : 
-             activeModule === 'hardware' ? 'Control de Inventario & Órdenes' : 
-             'Catálogo Interactivo con IA'}
+            {activeModule === 'print' ? 'Control de Producción & IA' :
+              activeModule === 'hardware' ? 'Control de Inventario & Órdenes' :
+                'Catálogo Interactivo con IA'}
           </p>
         </div>
-        
+
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button 
+          <button
             className="home-btn"
             onClick={() => setHasSelectedModule(false)}
             style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', textDecoration: 'underline' }}
           >
             Volver al Inicio
           </button>
-          <button 
-            className="new-job-btn" 
+          <button
+            className="new-job-btn"
             style={{ background: 'transparent', border: '1px solid var(--glass-border)' }}
             onClick={() => setShowSettings(true)}
           >
@@ -191,24 +191,24 @@ function App() {
           <button className="new-job-btn">+ Nuevo Pedido</button>
         </div>
       </header>
-      
+
       <main className="main-content">
         <div className="kanban-wrapper">
           {activeModule === 'store' ? (
             <div style={{ position: 'relative', width: '100%', height: '100%' }}>
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-                <StoreCatalog 
-                  storeSearchQuery={storeSearchQuery} 
+                <StoreCatalog
+                  storeSearchQuery={storeSearchQuery}
                   onAddToCart={(p) => {
                     handleAddToCart(p, 1);
                     // Opcional: Mostrar carrito automáticamente al añadir
                     // setShowCart(true); 
-                  }} 
+                  }}
                 />
               </div>
 
               {/* Floating button */}
-              <button 
+              <button
                 className="floating-cart-btn"
                 onClick={() => setShowCart(!showCart)}
               >
@@ -223,7 +223,7 @@ function App() {
               {/* Cart Drawer */}
               {showCart && (
                 <div className="cart-drawer-overlay">
-                  <ShoppingCart 
+                  <ShoppingCart
                     cart={cart}
                     onRemoveFromCart={handleRemoveFromCart}
                     onCheckout={() => {
@@ -236,8 +236,8 @@ function App() {
               )}
             </div>
           ) : (
-            <KanbanBoard 
-              jobs={activeModule === 'print' ? jobs : hardwareOrders} 
+            <KanbanBoard
+              jobs={activeModule === 'print' ? jobs : hardwareOrders}
               activeModule={activeModule}
               onJobMove={handleJobMove}
               onVerifyPayment={handleVerifyPayment}
@@ -245,21 +245,21 @@ function App() {
             />
           )}
         </div>
-        
+
         <div className={`chat-wrapper ${isChatOpen ? 'open' : 'closed'}`}>
           <div className="chat-mobile-header" onClick={() => setIsChatOpen(!isChatOpen)}>
             <span>💬 Chat & Asistente IA</span>
             <span>{isChatOpen ? '▼' : '▲'}</span>
           </div>
           <div className="chat-content-area">
-            <ChatSimulator 
+            <ChatSimulator
               activeModule={activeModule}
-              onJobCreated={handleNewJob} 
+              onJobCreated={handleNewJob}
               onUpdateJobDetails={(jobId, updates) => {
                 if (activeModule === 'print') {
-                   setJobs(prev => prev.map(job => job.id === jobId ? { ...job, ...updates } : job));
+                  setJobs(prev => prev.map(job => job.id === jobId ? { ...job, ...updates } : job));
                 } else if (activeModule === 'hardware') {
-                   setHardwareOrders(prev => prev.map(order => order.id === jobId ? { ...order, ...updates } : order));
+                  setHardwareOrders(prev => prev.map(order => order.id === jobId ? { ...order, ...updates } : order));
                 }
               }}
               lastNotification={lastNotification}
@@ -277,10 +277,10 @@ function App() {
             />
           </div>
         </div>
-        
+
         {/* Mobile floating button when closed */}
         {!isChatOpen && (
-          <button 
+          <button
             className="mobile-chat-toggle"
             onClick={() => setIsChatOpen(true)}
           >
@@ -290,14 +290,14 @@ function App() {
       </main>
 
       {jobToValidate && (
-        <FileValidatorModal 
+        <FileValidatorModal
           onClose={() => setJobToValidate(null)}
           onValidateSuccess={handleValidateSuccess}
         />
       )}
 
       {showSettings && (
-        <SettingsModal 
+        <SettingsModal
           initialSettings={pricingSettings}
           onClose={() => setShowSettings(false)}
           onSaveSettings={(newSettings) => setPricingSettings(newSettings)}

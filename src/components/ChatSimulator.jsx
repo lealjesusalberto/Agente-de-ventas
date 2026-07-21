@@ -22,7 +22,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
 
   useEffect(() => {
     // Reset conversation when module changes
-    let greeting = `¡Hola! Soy el asistente virtual de ${activeModule === 'print' ? 'Impresión' : activeModule === 'hardware' ? 'Ferretería' : 'la Tienda en Línea'}. `;
+    let greeting = `¡Hola! Soy el asistente virtual de ${activeModule === 'print' ? 'Impresión' : activeModule === 'hardware' ? 'Ferretería' : 'Mini Market'}. `;
     if (activeModule === 'store') {
         greeting += '¿En qué te puedo ayudar hoy? Puedes preguntarme por herramientas, pinturas, o lo que busques.';
         setBotState('STORE_CHAT');
@@ -549,7 +549,7 @@ const ChatSimulator = ({ activeModule, onJobCreated, onUpdateJobDetails, lastNot
       clientName: clientName || 'Cliente Web',
       clientType: 'Nuevo',
       description: itemsDesc + `\nRef Pago: ${paymentRef}`,
-      material: 'Tienda en Línea',
+      material: 'Mini Market',
       status: 'pending',
       priceUsd: total.toFixed(2),
       priceBs: (total * pricingSettings.exchangeRate).toFixed(2),
