@@ -49,7 +49,8 @@ const StoreCatalog = ({ storeSearchQuery, onAddToCart }) => {
           filteredProducts.map(product => (
             <div key={product.id} className="product-card glass-card">
               <div className="product-image-container">
-                <img src={product.image} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image normal" />
+                {product.imageHover && <img src={product.imageHover} alt={product.name} className="product-image hover-img" />}
                 {product.stock < 20 && <span className="low-stock-badge">Poco Stock</span>}
               </div>
               <div className="product-details">

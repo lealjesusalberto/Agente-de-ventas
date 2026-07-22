@@ -99,6 +99,7 @@ export const storeProducts = [
     price: 12.50,
     description: 'Martillo resistente con mango de goma antideslizante, ideal para carpintería.',
     image: 'https://images.unsplash.com/photo-1581166397057-235af2b3c6dd?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=400&q=80',
     stock: 24,
     category: 'Herramientas Manuales'
   },
@@ -109,6 +110,7 @@ export const storeProducts = [
     price: 45.00,
     description: 'Taladro eléctrico con función de percusión y velocidad variable. Incluye maletín.',
     image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=400&q=80',
     stock: 12,
     category: 'Herramientas Eléctricas'
   },
@@ -119,6 +121,7 @@ export const storeProducts = [
     price: 25.00,
     description: 'Pintura acrílica lavable de alto rendimiento, acabado mate.',
     image: 'https://images.unsplash.com/photo-1562184552-997c461abbe6?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80',
     stock: 40,
     category: 'Pintura y Acabados'
   },
@@ -129,6 +132,7 @@ export const storeProducts = [
     price: 6.00,
     description: 'Brocha de cerdas naturales, ideal para acabados lisos en paredes grandes.',
     image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&w=400&q=80',
     stock: 100,
     category: 'Pintura y Acabados'
   },
@@ -139,6 +143,7 @@ export const storeProducts = [
     price: 15.00,
     description: 'Juego de destornilladores estría y plano con punta magnética.',
     image: 'https://images.unsplash.com/photo-1542013063-e659b02d6b38?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1508873699372-7aeab60b44ab?auto=format&fit=crop&w=400&q=80',
     stock: 18,
     category: 'Herramientas Manuales'
   },
@@ -149,6 +154,7 @@ export const storeProducts = [
     price: 6.00,
     description: 'Caja de 1kg de clavos de acero galvanizado de alta resistencia.',
     image: 'https://images.unsplash.com/photo-1588691516086-4447c2111d51?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1523428456070-5221ff62ebc2?auto=format&fit=crop&w=400&q=80',
     stock: 50,
     category: 'Tornillería y Fijación'
   },
@@ -159,6 +165,7 @@ export const storeProducts = [
     price: 8.50,
     description: 'Cemento de alta resistencia estructural, ideal para columnas, vigas y losas.',
     image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=400&q=80',
     stock: 120,
     category: 'Construcción'
   },
@@ -169,6 +176,7 @@ export const storeProducts = [
     price: 5.00,
     description: 'Tubería de PVC de presión para distribución de agua potable (3 metros).',
     image: 'https://images.unsplash.com/photo-1620245648852-78d1297e07b8?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
     stock: 200,
     category: 'Plomería'
   },
@@ -179,6 +187,7 @@ export const storeProducts = [
     price: 12.00,
     description: 'Cerradura para puertas de madera o metal, incluye 3 llaves de seguridad.',
     image: 'https://images.unsplash.com/photo-1558025137-0b406e9cb1df?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1563604113-94c6536b3b27?auto=format&fit=crop&w=400&q=80',
     stock: 15,
     category: 'Herramientas Manuales'
   },
@@ -189,6 +198,7 @@ export const storeProducts = [
     price: 4.00,
     description: 'Lámpara LED de luz blanca fría (6500K) de bajo consumo.',
     image: 'https://images.unsplash.com/photo-1563604113-94c6536b3b27?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1558442074-3c19857bc1dc?auto=format&fit=crop&w=400&q=80',
     stock: 45,
     category: 'Electricidad'
   },
@@ -199,6 +209,7 @@ export const storeProducts = [
     price: 55.00,
     description: 'Rollo de cable eléctrico 100% cobre para instalaciones residenciales.',
     image: 'https://images.unsplash.com/photo-1558442074-3c19857bc1dc?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1620245648852-78d1297e07b8?auto=format&fit=crop&w=400&q=80',
     stock: 8,
     category: 'Electricidad'
   },
@@ -209,6 +220,7 @@ export const storeProducts = [
     price: 14.00,
     description: 'Enduído plástico para encamisar paredes interiores. Acabado súper liso.',
     image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80',
+    imageHover: 'https://images.unsplash.com/photo-1562184552-997c461abbe6?auto=format&fit=crop&w=400&q=80',
     stock: 32,
     category: 'Pintura y Acabados'
   }
